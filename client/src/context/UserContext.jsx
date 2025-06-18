@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const UserContext = createContext();
 
-export const UserProvider = ({ children }) => {
+export const UserProvider = ({ children }) => { //representa los componentes hijos que estarán envueltos por este contexto.
   const [usuario, setUsuario] = useState(null);
   const [cargando, setCargando] = useState(true);
 
@@ -23,4 +23,4 @@ export const UserProvider = ({ children }) => {
   );
 };
 
-export const useUser = () => useContext(UserContext);
+export const useUser = () => useContext(UserContext);// permite acceder al contexto de usuario en cualquier componente hijo que lo consuma.

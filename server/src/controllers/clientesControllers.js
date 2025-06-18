@@ -42,7 +42,7 @@ export const listarClienteController = async (req, res) => {
   }
 };
 
-// controlador para listar un cliente por razon social o cuit o id 
+// controlador para ACTUALIZAR un cliente por razon social o cuit o id 
 //export const listarClienteController = async (req, res) => {
     //const { id = '', razon_social = '', cuit = '' } = req.query;
 

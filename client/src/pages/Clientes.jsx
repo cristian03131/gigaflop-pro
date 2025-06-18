@@ -7,37 +7,37 @@ import MensajeAlerta from '../components/MensajeAlerta';
 import '../CSS/menu.css';
 
 const Clientes = () => {
-  const [clientes, setClientes] = useState([]);
-  const [busqueda, setBusqueda] = useState('');
-  const [mensajeError, setMensajeError] = useState('');
-  const [showRegisterForm, setShowRegisterForm] = useState(false);
-  const [clienteAEliminar, setClienteAEliminar] = useState(null);
-  const [clienteAEditar, setClienteAEditar] = useState(null);
+  const [clientes, setClientes] = useState([]); //almacena la lista de clientes obtenida del servidor.
+  const [busqueda, setBusqueda] = useState(''); //maneja el término de búsqueda introducido por el usuario.
+  const [mensajeError, setMensajeError] = useState(''); //guarda mensajes de error en caso de fallas en las solicitudes.
+  const [showRegisterForm, setShowRegisterForm] = useState(false); //controla la visibilidad del formulario de registro.
+  const [clienteAEliminar, setClienteAEliminar] = useState(null); //almacena el cliente que el usuario seleccionó para eliminar.
+  const [clienteAEditar, setClienteAEditar] = useState(null); //almacena el cliente que el usuario seleccionó para editar.
 
-  const obtenerClientes = () => {
+  const obtenerClientes = () => { //recupera la lista de clientes desde el servidor.
     axios.get('http://localhost:4000/api/clientes')
       .then((res) => {
-        setClientes(res.data);
+        setClientes(res.data); // actualiza el estado con la lista de clientes obtenida.
         setMensajeError('');
       })
       .catch(() => {
-        setClientes([]);
+        setClientes([]); // limpia la lista de clientes en caso de error.
         setMensajeError('Error al recuperar la lista de clientes');
       });
   };
 
-  useEffect(() => {
+  useEffect(() => { //uando el componente se monta por primera vez, se llama a la función obtenerClientes para cargar la lista de clientes.
     obtenerClientes();
   }, []);
 
-  // ✅ Restauramos la búsqueda con debounce
-  useEffect(() => {
-    if (busqueda.trim().length < 1) {
+  // Restauramos la búsqueda con debounce
+  useEffect(() => { // cada vez que el usuario escribe en el campo de búsqueda, se ejecuta este efecto.
+    if (busqueda.trim().length < 1) { 
       obtenerClientes();
       return;
     }
 
-    const delay = setTimeout(() => {
+    const delay = setTimeout(() => { // implementamos un retraso para evitar solicitudes excesivas al servidor.
       axios.get('http://localhost:4000/api/clientes/buscar', { params: { razon_social: busqueda } })
         .then((res) => {
           setClientes(Array.isArray(res.data) ? res.data : []);
@@ -52,7 +52,7 @@ const Clientes = () => {
     return () => clearTimeout(delay);
   }, [busqueda]);
 
-  const handleEliminar = (cliente) => {
+  const handleEliminar = (cliente) => { //recibe un cliente y establece el estado clienteAEliminar con el cliente seleccionado.
     setClienteAEliminar(cliente);
   };
 

@@ -54,7 +54,7 @@ export const listarCliente = async ({ razon_social }) => {
 //modelo para actualizar un cliente por cuit
 export const actualizarCliente = async (cuit, {razon_social}) => {
    const query ='UPDATE cliente SET razon_social = ? WHERE cuit = ?';
-   const [result] = await pool.execute(query, [razon_social, cuit]);// ejecuta la consulta para actualizar un cliente por su id
+   const [result] = await pool.execute(query, [razon_social, cuit]);// ejecuta la consulta para actualizar un cliente por su cuit
    return result.affectedRows;// devuelve el número de filas afectadas por la actualización
 };
 
