@@ -79,7 +79,7 @@ const Clientes = () => {
   const confirmarEdicion = async (e, nuevaRazonSocial, nuevoCuit) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:4000/api/clientes/${clienteAEditar.cuit}`, {
+      await axios.put(`http://localhost:4000/api/clientes/${clienteAEditar.cuit}`, {// esta haciendo una solicitud PUT al servidor para actualizar el cliente.
         razon_social: nuevaRazonSocial,
         cuit: nuevoCuit,
       });

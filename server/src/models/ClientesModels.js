@@ -2,7 +2,7 @@ import pool from '../config/db.js';
 
 
 // modelo para crear cliente
-export const crearCliente = async ({razon_social,cuit}) => {
+export const crearCliente = async ({razon_social,cuit}) => { //recibe un objeto como parametro
     const query = 'INSERT INTO cliente (razon_social,cuit) VALUES (?,?)';//consulta SQL para insertar un cliente
     const [result] = await pool.execute(query, [razon_social, cuit]);// ejecuta la consulta con los valores proporcionados
     
