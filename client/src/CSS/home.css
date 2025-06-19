@@ -1,4 +1,27 @@
+/* Asegura que html y body ocupen toda la altura de la ventana y sin márgenes/rellenos */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
 
+/* El body solo necesita control de scroll si todo el documento lo necesita */
+body {
+  overflow-y: auto; /* Permite el scroll vertical si el contenido excede la altura */
+  -webkit-overflow-scrolling: touch; /* Opcional: mejora el rendimiento del scroll en iOS */
+}
+
+/*
+  Contenedor principal para la estructura de la página (Header, Main Content, Footer)
+  Este es el elemento clave para el "Sticky Footer"
+*/
+.home-container {
+  display: flex;          /* Convierte home-container en un contenedor flex */
+  flex-direction: column; /* Los hijos de home-container se apilan verticalmente */
+  min-height: 100vh;      /* Asegura que home-container ocupe al menos toda la altura de la ventana */
+}
+
+/* Estilos para el encabezado */
 .header-home {
   background-color: #4285f4;
   color: white;
@@ -7,21 +30,18 @@
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-
-
 }
+
 .login-home:hover {
- color: #000000; /* Cambia el color al pasar el mouse */
+  color: #000000; /* Cambia el color al pasar el mouse */
   cursor: pointer; /* Cambia el cursor para indicar que es interactivo */
   transform: rotate(2deg); /* Añade un ligero giro al pasar el mouse */
   transition: transform 0.3s ease, color 0.3s ease; /* Añade una transición suave */
-
 }
 
 .title-home {
   font-size: 2em;
   margin: 0;
-
 }
 
 .nav a {
@@ -31,11 +51,17 @@
   font-weight: bold;
 }
 
+/*
+  Contenido principal de la página
+  'flex: 1' hace que este elemento crezca y ocupe todo el espacio disponible,
+  empujando el footer hacia abajo.
+*/
 .main-content {
+  flex: 1; /* Esto hace que el main-content crezca y empuje el footer hacia abajo */
   background-image: linear-gradient(to right, white, white, white, #a7a7b19c, #7e7c7c, black);
   color: #333;
   padding: 40px 20px;
-  min-height: 60vh;
+  /* min-height ya no es tan crítico aquí, `flex: 1` lo maneja */
 }
 
 .hero {
@@ -57,49 +83,76 @@
   box-shadow: 5px 5px 15px #c1c1c5;
 }
 
+/* Estilos para el pie de página */
 .footer-home {
-background-color: #000;
+  background-color: #000;
   color: #fff;
   padding: 20px;
   text-align: center;
+  display: flex;             /* Convierte el footer en un contenedor flex para su contenido interno */
+  flex-direction: column;    /* Organiza el contenido del footer en una columna */
+  align-items: center;       /* Centra el contenido horizontalmente dentro del footer */
+  justify-content: center;   /* Centra el contenido verticalmente dentro del footer */
+
+  /* min-height ya no es necesario, el footer ocupará solo el espacio de su contenido */
+}
+
+/* Estilos internos del footer */
+.footer-content {
   display: flex;
   flex-direction: column;
-  /* CAMBIO CLAVE AQUÍ */
-  min-height: 21.5vh; /* El footer tendrá al menos esta altura, pero puede crecer */
+  justify-content: center;
   align-items: center;
-  align-content: center;
-  /* Si la página completa necesita scroll, asegúrate de que el body/html lo permita */
-  /* Revisa la configuración del body/html que te di antes */
+  width: 100%;
+}
+
+.footer-info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap; /* Permite que los elementos de info se envuelvan en pantallas pequeñas */
+  width: 100%;
+}
+
+.contacto-home {
+  margin: 10px 20px; /* Ajusta los márgenes para los párrafos de contacto */
+}
+
+.footer-socials {
+  margin-top: 15px; /* Espacio entre la información y las redes sociales */
 }
 
 .footer .socials a {
   color: #4285f4;
   margin: 0 10px;
   text-decoration: none;
+  font-size: 1.1em; /* Ajusta el tamaño de los íconos/texto de redes */
 }
 
 .footer .socials a:hover {
   text-decoration: underline;
 }
-.footer-content{
-   
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 70%;
 
-}
-.footer-info{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-}
 .redes {
-margin-right: 20px;
+  margin-right: 20px; /* Margen entre Instagram y Facebook */
 }
-.contacto-home{
-    margin: 20px;
+
+/* Puedes añadir media queries aquí para responsive design si lo necesitas */
+/* Por ejemplo, para apilar la información del footer en pantallas pequeñas */
+@media (max-width: 768px) {
+  .footer-info {
+    flex-direction: column; /* Apila la información de contacto en pantallas pequeñas */
+    align-items: center;
+  }
+  .contacto-home {
+    margin: 5px 0; /* Reduce los márgenes verticales */
+  }
+  .redes {
+    margin-right: 10px; /* Ajusta el margen de las redes */
+  }
+  .footer .socials a {
+    margin: 0 5px;
+  }
 }
 

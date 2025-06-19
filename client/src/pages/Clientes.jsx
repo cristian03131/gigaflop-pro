@@ -136,7 +136,7 @@ const Clientes = () => {
           </div>
 
           <div className="menu-matriz">
-            {/* ✅ Buscador restaurado */}
+            {/* Buscador restaurado */}
             <div className="filtros">
               <input
                 className="buscador"
@@ -144,7 +144,7 @@ const Clientes = () => {
                 value={busqueda}
                 onChange={(e) => setBusqueda(e.target.value)}
               />
-              <button onClick={() => { setBusqueda(''); setMensajeError(''); }}>Limpiar</button>
+              <button className='botonlimpiar' onClick={() => { setBusqueda(''); setMensajeError(''); }}>Limpiar</button>
               {mensajeError && <p className="mensaje-error">{mensajeError}</p>}
             </div>
 

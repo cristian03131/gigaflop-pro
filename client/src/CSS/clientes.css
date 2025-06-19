@@ -62,3 +62,13 @@
   cursor: pointer;
   font-size: 20px;
 }
+
+.boton-limpiar {
+  background-color: #f44336; /* Rojo */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
