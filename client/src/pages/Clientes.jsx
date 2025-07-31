@@ -6,6 +6,7 @@ import Register from '../components/Register';
 import MensajeAlerta from '../components/MensajeAlerta';
 import '../CSS/menu.css';
 
+console.log("API_URL:", process.env.REACT_APP_API_URL);
 const Clientes = () => {
   const API_URL = process.env.REACT_APP_API_URL;
   const [clientes, setClientes] = useState([]); //almacena la lista de clientes obtenida del servidor.
