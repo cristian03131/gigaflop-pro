@@ -18,7 +18,7 @@ const app = express();
 
 // Configura CORS para permitir sólo tu frontend (ejemplo)
 app.use(cors({
-  origin: process.env.FRONTEND_URL, // URL de tu frontend
+  origin: '*', // URL de tu frontend
   credentials: true
 }));
 
