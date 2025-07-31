@@ -22,6 +22,15 @@ app.use(cors({
   credentials: true
 }));
 
+app.options('*', cors({
+  origin: process.env.FRONTEND_URL,
+  credentials: true
+}));
+
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok' });
+});
+
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(cookieParser());
