@@ -3,6 +3,7 @@ import '../CSS/register.css';
 import axios from 'axios';
 
 const Register = ({ onClose }) => {
+  const API_URL = process.env.REACT_APP_API_URL;
   const [razonSocial, setRazonSocial] = useState('');
   const [cuit, setCuit] = useState('');
   const [mensaje, setMensaje] = useState('');
@@ -11,7 +12,7 @@ const Register = ({ onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:4000/api/clientes', {
+      const res = await axios.post(`${API_URL}/clientes`, {
         razon_social: razonSocial,
         cuit: cuit,
       });

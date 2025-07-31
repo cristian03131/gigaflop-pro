@@ -4,10 +4,10 @@ import axios from 'axios';
 
 const RutaProtegida = () => {
   const [autenticado, setAutenticado] = useState(null);
-
+  const API_URL = process.env.REACT_APP_API_URL;
   useEffect(() => {
     axios
-      .get('/api/usuarios/checkAuth', { withCredentials: true })
+      .get(`${API_URL}/usuarios/checkAuth`, { withCredentials: true })
       .then(() => setAutenticado(true))
       .catch(() => setAutenticado(false));
   }, []);

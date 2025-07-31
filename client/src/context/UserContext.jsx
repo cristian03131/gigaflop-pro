@@ -5,12 +5,13 @@ import axios from 'axios';
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => { //representa los componentes hijos que estarán envueltos por este contexto.
+  const API_URL = process.env.REACT_APP_API_URL;
   const [usuario, setUsuario] = useState(null);
   const [cargando, setCargando] = useState(true);
 
   useEffect(() => {
     axios
-    .get('/api/usuarios/profile', { withCredentials: true })
+    .get(`${API_URL}/usuarios/profile`, { withCredentials: true })
     .then(res => setUsuario(res.data.usuario))
     .catch(() => setUsuario(null))
     .finally(() => setCargando(false));

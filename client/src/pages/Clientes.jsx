@@ -7,6 +7,7 @@ import MensajeAlerta from '../components/MensajeAlerta';
 import '../CSS/menu.css';
 
 const Clientes = () => {
+  const API_URL = process.env.REACT_APP_API_URL;
   const [clientes, setClientes] = useState([]); //almacena la lista de clientes obtenida del servidor.
   const [busqueda, setBusqueda] = useState(''); //maneja el término de búsqueda introducido por el usuario.
   const [mensajeError, setMensajeError] = useState(''); //guarda mensajes de error en caso de fallas en las solicitudes.
@@ -15,7 +16,7 @@ const Clientes = () => {
   const [clienteAEditar, setClienteAEditar] = useState(null); //almacena el cliente que el usuario seleccionó para editar.
 
   const obtenerClientes = () => { //recupera la lista de clientes desde el servidor.
-    axios.get('http://localhost:4000/api/clientes')
+    axios.get(`${API_URL}/clientes`)
       .then((res) => {
         setClientes(res.data); // actualiza el estado con la lista de clientes obtenida.
         setMensajeError('');
@@ -38,7 +39,7 @@ const Clientes = () => {
     }
 
     const delay = setTimeout(() => { // implementamos un retraso para evitar solicitudes excesivas al servidor.
-      axios.get('http://localhost:4000/api/clientes/buscar', { params: { razon_social: busqueda } })
+      axios.get(`${API_URL}/clientes/buscar`, { params: { razon_social: busqueda } })
         .then((res) => {
           setClientes(Array.isArray(res.data) ? res.data : []);
           setMensajeError('');
@@ -58,7 +59,7 @@ const Clientes = () => {
 
   const confirmarEliminacion = async () => {
     try {
-      await axios.delete(`http://localhost:4000/api/clientes/${clienteAEliminar.cuit}`);
+      await axios.delete(`${API_URL}/clientes/${clienteAEliminar.cuit}`);
       setClientes(clientes.filter((c) => c.cuit !== clienteAEliminar.cuit));
       setClienteAEliminar(null);
     } catch (error) {
@@ -79,7 +80,7 @@ const Clientes = () => {
   const confirmarEdicion = async (e, nuevaRazonSocial, nuevoCuit) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:4000/api/clientes/${clienteAEditar.cuit}`, {// esta haciendo una solicitud PUT al servidor para actualizar el cliente.
+      await axios.put(`${API_URL}/clientes/${clienteAEditar.cuit}`, {// esta haciendo una solicitud PUT al servidor para actualizar el cliente.
         razon_social: nuevaRazonSocial,
         cuit: nuevoCuit,
       });
