@@ -12,7 +12,7 @@ const Sidebar = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post(`${API_URL}/usuarios/logout`, null, { withCredentials: true });
+      await axios.post('/api/usuarios/logout', null, { withCredentials: true });
       setUsuario(null); // limpia el contexto
       navigate('/');
     } catch (error) {
