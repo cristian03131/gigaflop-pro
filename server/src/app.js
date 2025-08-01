@@ -10,10 +10,11 @@ import usuariosRoutes from './routes/usuariosRoutes.js';
 import menuRoutes from './routes/menuRoutes.js';
 import clientesRoutes from './routes/clientesRoutes.js';
 import productosRoutes from './routes/productosRoutes.js';
-
+import { errorHandler } from './middlewares/errorHandler.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+app.use(errorHandler);
 const app = express();
 
 // Obtener __dirname en entorno ES Modules
@@ -56,5 +57,7 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ message: 'Ocurrió un error en el servidor' });
 });
+
+
 
 export default app;

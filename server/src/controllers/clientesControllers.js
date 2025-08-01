@@ -68,7 +68,7 @@ export const actualizarClienteController = async (req,res) => {
     try{
         const filasAfectadas = await actualizarCliente(cuit, {razon_social});
         if (filasAfectadas === 0) {
-            return res.status(404).json({error: "Cliente no encontrado o sin cambios", error});
+        return res.status(404).json({ error: "Cliente no encontrado o sin cambios" });
         }
         res.status(200).json({mensaje: "Cliente actualizado con exito!"});
         

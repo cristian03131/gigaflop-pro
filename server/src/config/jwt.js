@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken'
-
-export const TOKEN_SECRET = "some secret key"
+export const TOKEN_SECRET = process.env.TOKEN_SECRET || "default_secret_key";
 export function creatAccesToken(payload) {
     return new Promise((resolve, reject) => {
         jwt.sign(
