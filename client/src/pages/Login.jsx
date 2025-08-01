@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import '../CSS/login.css'
 import axios from 'axios';
 import { useUser } from '../context/UserContext.jsx';
@@ -15,7 +15,7 @@ const Login = () => {
   const handleLogin = async () => {
     try {
       const res = await axios.post(
-      `${API_URL}/usuarios/login`,
+        '/api/usuarios/login',
         { email, password },
         { withCredentials: true }
       );

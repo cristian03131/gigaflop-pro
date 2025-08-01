@@ -6,7 +6,6 @@ import Register from '../components/Register';
 import MensajeAlerta from '../components/MensajeAlerta';
 import '../CSS/menu.css';
 
-console.log("API_URL:", process.env.REACT_APP_API_URL);
 const Clientes = () => {
   const API_URL = process.env.REACT_APP_API_URL;
   const [clientes, setClientes] = useState([]); //almacena la lista de clientes obtenida del servidor.
@@ -81,7 +80,7 @@ const Clientes = () => {
   const confirmarEdicion = async (e, nuevaRazonSocial, nuevoCuit) => {
     e.preventDefault();
     try {
-      await axios.put(`${API_URL}/clientes/${clienteAEditar.cuit}`, {// esta haciendo una solicitud PUT al servidor para actualizar el cliente.
+      await axios.put(`http://localhost:4000/api/clientes/${clienteAEditar.cuit}`, {// esta haciendo una solicitud PUT al servidor para actualizar el cliente.
         razon_social: nuevaRazonSocial,
         cuit: nuevoCuit,
       });
