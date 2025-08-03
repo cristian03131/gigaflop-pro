@@ -1,9 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
-import Login from "../pages/Login";
-import Menu from "../pages/Menu";
-import Clientes from "../pages/Clientes";
-import RutaProtegida from '../components/RutaProtegida';
-import Home from "../pages/Home";
+import Login from "../pages/Login.jsx";
+import Menu from "../pages/Menu.jsx";
+import Clientes from "../pages/Clientes.jsx";
+import RutaProtegida from '../components/RutaProtegida.jsx';
+import Home from "../pages/Home.jsx";
 
 
 export const router = createBrowserRouter([
