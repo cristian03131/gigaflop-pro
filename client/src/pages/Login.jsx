@@ -11,11 +11,11 @@ const Login = () => {
   const [error, setError] = useState('');
 
   const navigate = useNavigate();
-  const API_URL = process.env.REACT_APP_API_URL;
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000/api';
   const handleLogin = async () => {
     try {
       const res = await axios.post(
-        '/api/usuarios/login',
+        `${API_URL}/usuarios/login`,
         { email, password },
         { withCredentials: true }
       );
