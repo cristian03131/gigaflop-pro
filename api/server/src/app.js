@@ -40,9 +40,9 @@ app.use(cookieParser());
 
 // Rutas API
 app.use("/api/usuarios", usuariosRoutes);
-app.use("/api", menuRoutes);
+app.use("/api/menu", menuRoutes);
 app.use("/api/clientes", clientesRoutes);
-app.use("/api", productosRoutes);
+app.use("/api/productos", productosRoutes);
 
 // Servir archivos estáticos desde la carpeta build de React 
 app.use(express.static(path.join(__dirname, '../../client/build')));
