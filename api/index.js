@@ -1,4 +1,6 @@
-const app = require('./server/src/app.js');
- // Ajusta ruta según tu proyecto
+import app from './server/src/app.js';
+
+
+
 
 export default app;
