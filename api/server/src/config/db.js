@@ -1,30 +1,30 @@
 //CONEXION A BD
-import mysql from 'mysql2/promise';
+import pg from 'pg';
 import dotenv from 'dotenv';
 
-dotenv.config(); // carga las variables de .env
+dotenv.config();
 
-const pool = mysql.createPool({
+const { Pool } = pg;
+
+const pool = new Pool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   port: process.env.DB_PORT,
-  waitForConnections: true,
-  connectionLimit: 10,
-  connectTimeout: 10000, // 10 segundos
-  acquireTimeout: 10000, // 10 segundos
+  max: 10, // límite de conexiones
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 10000,
 });
-pool.getConnection()
-  .then(connection => {
-    console.log(' Conectado a MySQL sistema_cotizacion correctamente');
-    connection.release(); // libera la conexión
+
+pool.connect()
+  .then(client => {
+    console.log('Conectado a PostgreSQL correctamente');
+    client.release();
   })
   .catch(err => {
-    console.error('Error al conectar a MySQL:', err.message);
+    console.error('Error al conectar a PostgreSQL:', err.message);
   });
-
-
 
 export default pool;
 
