@@ -18,6 +18,10 @@ const app = express();
 
 
 
+
+
+
+
 // Obtener __dirname en entorno ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -30,7 +34,7 @@ app.use(cors({
 
 const allowedOrigins = [process.env.FRONTEND_URL]; // O las que necesites
 
-app.options(['/', '/api/*'], cors({
+app.options('/*splat', cors({
   origin: allowedOrigins,
   credentials: true,
 }));
