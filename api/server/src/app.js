@@ -15,7 +15,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const app = express();
-app.use(errorHandler);
+
 
 
 // Obtener __dirname en entorno ES Modules
@@ -28,12 +28,12 @@ app.use(cors({
   credentials: true,
 }));
 
-// Pre-configurar OPTIONS para CORS
-app.options('*', cors({
-  origin: process.env.FRONTEND_URL,
+const allowedOrigins = [process.env.FRONTEND_URL]; // O las que necesites
+
+app.options(['/', '/api/*'], cors({
+  origin: allowedOrigins,
   credentials: true,
 }));
-
 // Middleware comunes
 app.use(morgan('dev'));
 app.use(express.json());
@@ -49,7 +49,7 @@ app.use("/api/productos", productosRoutes);
 app.use(express.static(path.join(__dirname, '../../client/build')));
 
 // Para cualquier ruta que no sea API, servir index.html para SPA
-app.get('/*', (req, res) => {
+app.get('/*splat', (req, res) => {
   res.sendFile(path.join(__dirname, '../../client/build/index.html'));
 });
 // Middleware manejo de errores general
@@ -58,6 +58,11 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: 'Ocurrió un error en el servidor' });
 });
 
+// Middleware para registrar las rutas solicitadas (opcional) Esto lo agregue yo
+app.use((req, res, next) => {
+  console.log(`Ruta solicitada: ${req.method} ${req.originalUrl}`);
+  next();
+});
 
-
+app.use(errorHandler);
 export default app;
