@@ -14,8 +14,9 @@ import { errorHandler } from './middlewares/errorHandler.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-app.use(errorHandler);
 const app = express();
+app.use(errorHandler);
+
 
 // Obtener __dirname en entorno ES Modules
 const __filename = fileURLToPath(import.meta.url);
@@ -48,10 +49,9 @@ app.use("/api/productos", productosRoutes);
 app.use(express.static(path.join(__dirname, '../../client/build')));
 
 // Para cualquier ruta que no sea API, servir index.html para SPA
-app.get('*', (req, res) => {
+app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '../../client/build/index.html'));
 });
-
 // Middleware manejo de errores general
 app.use((err, req, res, next) => {
   console.error(err.stack);
