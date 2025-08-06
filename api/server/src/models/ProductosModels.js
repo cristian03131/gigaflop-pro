@@ -1,27 +1,27 @@
-import pool from '../config/db.js'; // Importa la conexión a la base de datos
-
+import pool from '../config/db.js';
 
 // Buscar producto por part_number
 export const buscarProductoPorPartNumber = async (partNumber) => {
-  const [rows] = await pool.query(
-    'SELECT * FROM productos WHERE LOWER(TRIM(part_number)) = LOWER(TRIM(?))',
-    [partNumber]
-  );
+  const query = 'SELECT * FROM productos WHERE LOWER(TRIM(part_number)) = LOWER(TRIM($1))';
+  const { rows } = await pool.query(query, [partNumber]);
   return rows[0]; // Devuelve uno
 };
 
 // Buscar productos por columna y valor
 export const buscarProductosPorColumna = async (columna, valor) => {
-  const columnasPermitidas = ['part_number', 'detalle', 'marca', 'categoria']; // Agrega columnas seguras
+  const columnasPermitidas = ['part_number', 'detalle', 'marca', 'categoria']; // Columnas válidas
   if (!columnasPermitidas.includes(columna)) throw new Error('Columna no válida');
 
-  let query = `SELECT * FROM productos WHERE LOWER(TRIM(${columna})) LIKE ?`;
-  const [rows] = await pool.query(query, [`%${valor.trim().toLowerCase()}%`]);
+  // Construir la consulta usando interpolación solo para el nombre de la columna validado
+  const query = `SELECT * FROM productos WHERE LOWER(TRIM(${columna})) LIKE $1`;
+  const { rows } = await pool.query(query, [`%${valor.trim().toLowerCase()}%`]);
   return rows;
 };
 
-//obtener todos los productos
+// Obtener todos los productos
 export const obtenerTodosLosProductos = async () => {
-  const [rows] = await pool.query('SELECT * FROM productos');
+  const query = 'SELECT * FROM productos';
+  const { rows } = await pool.query(query);
   return rows;
 };
+

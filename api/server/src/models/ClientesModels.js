@@ -2,25 +2,24 @@ import pool from '../config/db.js';
 
 
 // modelo para crear cliente
-export const crearCliente = async ({razon_social,cuit}) => { //recibe un objeto como parametro
-    const query = 'INSERT INTO cliente (razon_social,cuit) VALUES (?,?)';//consulta SQL para insertar un cliente
-    const [result] = await pool.execute(query, [razon_social, cuit]);// ejecuta la consulta con los valores proporcionados
-    
-    return result.insertId; // devuelve el id del cliente creado
-}
+export const crearCliente = async ({ razon_social, cuit }) => {
+  const query = 'INSERT INTO cliente (razon_social, cuit) VALUES ($1, $2) RETURNING id';
+  const { rows } = await pool.query(query, [razon_social, cuit]);
+  return rows[0].id;
+};
 
 //modelo para listar clientes
 export const listarClientes = async () => {
-    const [rows] = await pool.execute('SELECT * FROM cliente');// ejecuta la consulta para obtener todos los clientes
-    return rows; // devuelve todas las filas de la tabla cliente
-}
+  const query = 'SELECT * FROM cliente';
+  const { rows } = await pool.query(query);
+  return rows;
+};
 
 //modelo para listar cliente por razon social
 export const listarCliente = async ({ razon_social }) => {
-  const query = 'SELECT * FROM cliente WHERE razon_social LIKE ?';
-  const [rows] = await pool.execute(query, [`%${razon_social}%`]);
+  const query = 'SELECT * FROM cliente WHERE razon_social ILIKE $1';
+  const { rows } = await pool.query(query, [`%${razon_social}%`]);
   return rows;
-  
 };
 
 
@@ -52,15 +51,15 @@ export const listarCliente = async ({ razon_social }) => {
 
 
 //modelo para actualizar un cliente por cuit
-export const actualizarCliente = async (cuit, {razon_social}) => {
-   const query ='UPDATE cliente SET razon_social = ? WHERE cuit = ?';
-   const [result] = await pool.execute(query, [razon_social, cuit]);// ejecuta la consulta para actualizar un cliente por su cuit
-   return result.affectedRows;// devuelve el número de filas afectadas por la actualización
+export const actualizarCliente = async (cuit, { razon_social }) => {
+  const query = 'UPDATE cliente SET razon_social = $1 WHERE cuit = $2';
+  const result = await pool.query(query, [razon_social, cuit]);
+  return result.rowCount; // filas afectadas con pg
 };
 
 //modelo para eliminar un cliente por cuit
 export const eliminarCliente = async (cuit) => {
-    const query = 'DELETE FROM cliente WHERE cuit = ?'; // consulta SQL para eliminar un cliente por cuit
-    const [result] = await pool.execute(query, [cuit]); // ejecuta la consulta con el cuit proporcionado
-    return result.affectedRows; // devuelve el número de filas afectadas por la eliminación
+  const query = 'DELETE FROM cliente WHERE cuit = $1';
+  const result = await pool.query(query, [cuit]);
+  return result.rowCount; // filas afectadas
 };
