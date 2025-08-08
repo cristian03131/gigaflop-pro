@@ -49,7 +49,7 @@ app.use("/api/productos", productosRoutes);
 app.use(express.static(path.join(__dirname, '../../client/build')));
 
 // Para cualquier ruta que no sea API, servir index.html para SPA
-app.get('*', (req, res) => {
+app.get('/*splat', (req, res) => {
   res.sendFile(path.join(__dirname, '../../client/build/index.html'));
 });
 
