@@ -4,7 +4,7 @@ import Menu from "../pages/Menu.jsx";
 import Clientes from "../pages/Clientes.jsx";
 import RutaProtegida from '../components/RutaProtegida.jsx';
 import Home from "../pages/Home.jsx";
-
+import NotFound from "../pages/NotFound.jsx"; // Importa NotFound
 
 export const router = createBrowserRouter([
 
@@ -28,6 +28,10 @@ export const router = createBrowserRouter([
         element: <Clientes />,
       },
     ],
+  },
+  {
+    path: '*',          // Ruta catch-all para 404
+    element: <NotFound />,
   },
 ]);
 
