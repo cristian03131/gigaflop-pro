@@ -4,6 +4,10 @@ import {
   obtenerTodosLosProductos
 } from '../models/ProductosModels.js';
 
+// Lista de columnas válidas para búsqueda por columna
+const columnasValidas = ['detalle', 'part_number', 'categoria', 'subcategoria', 'marca'];
+
+
 // Buscar por part_number
 export const obtenerProductoPorPartNumber = async (req, res) => {
   try {
@@ -21,10 +25,17 @@ export const obtenerProductoPorPartNumber = async (req, res) => {
   }
 };
 
+
 // Buscar por cualquier columna válida
 export const obtenerProductosPorColumna = async (req, res) => {
   try {
     const { columna, valor } = req.params;
+
+    // Validar que la columna sea permitida
+    if (!columnasValidas.includes(columna)) {
+      return res.status(400).json({ mensaje: 'Columna inválida para búsqueda' });
+    }
+
     const productos = await buscarProductosPorColumna(columna, valor);
 
     if (productos.length > 0) {
@@ -37,6 +48,7 @@ export const obtenerProductosPorColumna = async (req, res) => {
     res.status(400).json({ mensaje: error.message });
   }
 };
+
 
 // Controlador para listar todos los productos
 export const listarTodosLosProductos = async (req, res) => {
