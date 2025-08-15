@@ -1,65 +1,71 @@
-import pool from '../config/db.js';
+import supabase from '../config/supabaseClient';
 
-
-// modelo para crear cliente
+// Crear cliente
 export const crearCliente = async ({ razon_social, cuit }) => {
-  const query = 'INSERT INTO cliente (razon_social, cuit) VALUES ($1, $2) RETURNING id';
-  const { rows } = await pool.query(query, [razon_social, cuit]);
-  return rows[0].id;
+  const { data, error } = await supabase
+    .from('cliente')
+    .insert({ razon_social, cuit })
+    .select('id')
+    .single();
+
+  if (error) throw error;
+
+  return data.id;
 };
 
-//modelo para listar clientes
+// Listar clientes
 export const listarClientes = async () => {
-  const query = 'SELECT * FROM cliente';
-  const { rows } = await pool.query(query);
-  return rows;
+  const { data, error } = await supabase
+    .from('cliente')
+    .select('*')
+    .order('id', { ascending: true });
+
+  if (error) throw error;
+
+  return data;
 };
 
-//modelo para listar cliente por razon social
-export const listarCliente = async ({ razon_social }) => {
-  const query = 'SELECT * FROM cliente WHERE razon_social ILIKE $1';
-  const { rows } = await pool.query(query, [`%${razon_social}%`]);
-  return rows;
+// Buscar clientes con filtros dinámicos
+export const buscarClientes = async ({ id, razon_social, cuit }) => {
+  let query = supabase.from('cliente').select('*').order('id', { ascending: true });
+
+  if (id !== undefined) {
+    query = query.eq('id', id);
+  }
+  if (razon_social) {
+    query = query.ilike('razon_social', `%${razon_social}%`);
+  }
+  if (cuit) {
+    query = query.ilike('cuit', `%${cuit}%`);
+  }
+
+  const { data, error } = await query;
+
+  if (error) throw error;
+
+  return data;
 };
 
-
-//modelo para listar un cliente por razon social o cuit o id
-//export const listarCliente = async ({ id = '', razon_social = '', cuit = '' }) => {
-  //let query = 'SELECT * FROM cliente WHERE 1=1';
-  //const valores = [];
-
-  //if (id) {
-    //query += ' AND id = ?';
-    //valores.push(id);
-  //}
-  //if (razon_social) {
-    //query += ' AND razon_social LIKE ?';
-    //valores.push(`%${razon_social}%`);
-  //}
-  //if (cuit) {
-    //query += ' AND cuit LIKE ?';
-    //valores.push(`%${cuit}%`);
-  //}
-
-  //query += ' LIMIT 1'; // solo un cliente
-
-  //const [rows] = await pool.execute(query, valores);
-  //return rows[0];
-//};
-
-    
-
-
-//modelo para actualizar un cliente por cuit
+// Actualizar cliente por cuit
 export const actualizarCliente = async (cuit, { razon_social }) => {
-  const query = 'UPDATE cliente SET razon_social = $1 WHERE cuit = $2';
-  const result = await pool.query(query, [razon_social, cuit]);
-  return result.rowCount; // filas afectadas con pg
+  const { data, error } = await supabase
+    .from('cliente')
+    .update({ razon_social })
+    .eq('cuit', cuit);
+
+  if (error) throw error;
+
+  return data.length; // o data para los registros actualizados
 };
 
-//modelo para eliminar un cliente por cuit
+// Eliminar cliente por cuit
 export const eliminarCliente = async (cuit) => {
-  const query = 'DELETE FROM cliente WHERE cuit = $1';
-  const result = await pool.query(query, [cuit]);
-  return result.rowCount; // filas afectadas
+  const { data, error } = await supabase
+    .from('cliente')
+    .delete()
+    .eq('cuit', cuit);
+
+  if (error) throw error;
+
+  return data.length; // o data para los registros eliminados
 };

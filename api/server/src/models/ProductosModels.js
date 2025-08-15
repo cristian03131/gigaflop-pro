@@ -1,27 +1,46 @@
-import pool from '../config/db.js';
+import supabase from '../config/supabaseClient';
 
-// Buscar producto por part_number
+// Buscar producto por part_number exacto (ignorando mayúsculas y espacios)
 export const buscarProductoPorPartNumber = async (partNumber) => {
-  const query = 'SELECT * FROM productos WHERE LOWER(TRIM(part_number)) = LOWER(TRIM($1))';
-  const { rows } = await pool.query(query, [partNumber]);
-  return rows[0]; // Devuelve uno
+  const { data, error } = await supabase
+    .from('productos')
+    .select('*')
+    .ilike('part_number', partNumber.trim())
+    .limit(1)
+    .single();
+
+  if (error) throw error;
+
+  return data;
 };
 
-// Buscar productos por columna y valor
+// Buscar productos por columna y valor (columnas permitidas: part_number, detalle, marca, categoria)
 export const buscarProductosPorColumna = async (columna, valor) => {
-  const columnasPermitidas = ['part_number', 'detalle', 'marca', 'categoria']; // Columnas válidas
-  if (!columnasPermitidas.includes(columna)) throw new Error('Columna no válida');
+  const columnasPermitidas = ['part_number', 'detalle', 'marca', 'categoria'];
 
-  // Construir la consulta usando interpolación solo para el nombre de la columna validado
-  const query = `SELECT * FROM productos WHERE LOWER(TRIM(${columna})) LIKE $1`;
-  const { rows } = await pool.query(query, [`%${valor.trim().toLowerCase()}%`]);
-  return rows;
+  if (!columnasPermitidas.includes(columna)) {
+    throw new Error('Columna no válida');
+  }
+
+  const { data, error } = await supabase
+    .from('productos')
+    .select('*')
+    .ilike(columna, `%${valor.trim()}%`);
+
+  if (error) throw error;
+
+  return data;
 };
 
-// Obtener todos los productos
+// Obtener todos los productos ordenados por id (ascendente)
 export const obtenerTodosLosProductos = async () => {
-  const query = 'SELECT * FROM productos';
-  const { rows } = await pool.query(query);
-  return rows;
+  const { data, error } = await supabase
+    .from('productos')
+    .select('*')
+    .order('id', { ascending: true });
+
+  if (error) throw error;
+
+  return data;
 };
 
