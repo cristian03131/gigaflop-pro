@@ -4,6 +4,7 @@ import Menu from "../pages/Menu.jsx";
 import Clientes from "../pages/Clientes.jsx";
 import RutaProtegida from '../components/RutaProtegida.jsx';
 import Home from "../pages/Home.jsx";
+import Registrarse from "../pages/Registrarse.jsx";
 import NotFound from "../pages/NotFound.jsx"; // Importa NotFound
 
 export const router = createBrowserRouter([
@@ -15,6 +16,10 @@ export const router = createBrowserRouter([
   {
     path: '/login',
     element: <Login />,
+  },
+  {
+    path: '/registro',
+    element: <Registrarse />,
   },
   {
     element: <RutaProtegida />, // rutas protegidas

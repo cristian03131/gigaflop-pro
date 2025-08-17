@@ -1,0 +1,74 @@
+/* Contenedor principal para registro */
+.registro-container {
+  max-width: 400px;
+  margin: 60px auto;
+  padding: 30px 25px;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 5px 5px 15px #c1c1c5;
+  color: #333;
+  font-family: Arial, sans-serif;
+}
+
+/* Título */
+.registro-container h2 {
+  color: #4285f4;
+  text-align: center;
+  margin-bottom: 25px;
+  font-weight: bold;
+  font-size: 1.8em;
+}
+
+/* Formulario - campos de entrada */
+.registro-container input[type="email"],
+.registro-container input[type="password"] {
+  width: 100%;
+  padding: 12px 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1em;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+.registro-container input[type="email"]:focus,
+.registro-container input[type="password"]:focus {
+  border-color: #4285f4;
+  outline: none;
+}
+
+/* Botón de envío */
+.registro-container button {
+  width: 100%;
+  background-color: #4285f4;
+  border: none;
+  padding: 14px 0;
+  font-size: 1.1em;
+  font-weight: bold;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.registro-container button:hover {
+  background-color: #3069d1;
+}
+
+/* Mensajes de error */
+.registro-container p {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.registro-container p[style*="color: red"] {
+  color: #d93025;
+  font-weight: bold;
+}
+
+/* Mensajes de éxito */
+.registro-container p[style*="color: green"] {
+  color: #188038;
+  font-weight: bold;
+}
