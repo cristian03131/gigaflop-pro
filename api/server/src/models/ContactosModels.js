@@ -1,4 +1,4 @@
-import supabase from '../config/supabaseClient';
+import supabase from '../config/supabaseClient.js';
 
 export const listarContactos = async () => {
   const { data, error } = await supabase

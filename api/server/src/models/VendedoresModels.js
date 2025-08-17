@@ -1,4 +1,4 @@
-import supabase from '../config/supabaseClient';
+import supabase from '../config/supabaseClient.js';
 
 export const listarVendedores = async () => {
   const { data, error } = await supabase

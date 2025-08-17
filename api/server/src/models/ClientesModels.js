@@ -1,4 +1,4 @@
-import supabase from '../config/supabaseClient';
+import supabase from '../config/supabaseClient.js';
 
 // Crear cliente
 export const crearCliente = async ({ razon_social, cuit }) => {

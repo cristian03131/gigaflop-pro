@@ -1,96 +1,47 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { useClientes } from '../context/ClientesContext';
 import Sidebar from '../components/Sidebar';
 import Register from '../components/Register';
 import MensajeAlerta from '../components/MensajeAlerta';
 import '../CSS/menu.css';
 
 const Clientes = () => {
-  const API_URL = process.env.REACT_APP_API_URL;
-  const [clientes, setClientes] = useState([]); //almacena la lista de clientes obtenida del servidor.
-  const [busqueda, setBusqueda] = useState(''); //maneja el término de búsqueda introducido por el usuario.
-  const [mensajeError, setMensajeError] = useState(''); //guarda mensajes de error en caso de fallas en las solicitudes.
-  const [showRegisterForm, setShowRegisterForm] = useState(false); //controla la visibilidad del formulario de registro.
-  const [clienteAEliminar, setClienteAEliminar] = useState(null); //almacena el cliente que el usuario seleccionó para eliminar.
-  const [clienteAEditar, setClienteAEditar] = useState(null); //almacena el cliente que el usuario seleccionó para editar.
+  const { clientes, loading, eliminarCliente, editarCliente } = useClientes();
 
-  const obtenerClientes = () => { //recupera la lista de clientes desde el servidor.
-    axios.get(`${API_URL}/clientes`)
-      .then((res) => {
-        setClientes(res.data); // actualiza el estado con la lista de clientes obtenida.
-        setMensajeError('');
-      })
-      .catch(() => {
-        setClientes([]); // limpia la lista de clientes en caso de error.
-        setMensajeError('Error al recuperar la lista de clientes');
-      });
-  };
+  const [busqueda, setBusqueda] = useState('');
+  const [mensajeError, setMensajeError] = useState('');
+  const [showRegisterForm, setShowRegisterForm] = useState(false);
+  const [clienteAEliminar, setClienteAEliminar] = useState(null);
+  const [clienteAEditar, setClienteAEditar] = useState(null);
 
-  useEffect(() => { //uando el componente se monta por primera vez, se llama a la función obtenerClientes para cargar la lista de clientes.
-    obtenerClientes();
-  }, []);
-
-  // Restauramos la búsqueda con debounce
-  useEffect(() => { // cada vez que el usuario escribe en el campo de búsqueda, se ejecuta este efecto.
-    if (busqueda.trim().length < 1) { 
-      obtenerClientes();
-      return;
-    }
-
-    const delay = setTimeout(() => { // implementamos un retraso para evitar solicitudes excesivas al servidor.
-      axios.get(`${API_URL}/clientes/buscar`, { params: { razon_social: busqueda } })
-        .then((res) => {
-          setClientes(Array.isArray(res.data) ? res.data : []);
-          setMensajeError('');
-        })
-        .catch(() => {
-          setClientes([]);
-          setMensajeError('Cliente no encontrado');
-        });
-    }, 400);
-
-    return () => clearTimeout(delay);
-  }, [busqueda]);
-
-  const handleEliminar = (cliente) => { //recibe un cliente y establece el estado clienteAEliminar con el cliente seleccionado.
-    setClienteAEliminar(cliente);
-  };
+  // Filtrado local simple por razón social
+  const clientesFiltrados = clientes.filter(c =>
+    c.razon_social.toLowerCase().includes(busqueda.toLowerCase())
+  );
 
   const confirmarEliminacion = async () => {
-    try {
-      await axios.delete(`${API_URL}/clientes/${clienteAEliminar.cuit}`);
-      setClientes(clientes.filter((c) => c.cuit !== clienteAEliminar.cuit));
-      setClienteAEliminar(null);
-    } catch (error) {
-      console.error('Error al eliminar cliente:', error);
+    if (!clienteAEliminar) return;
+    const resultado = await eliminarCliente(clienteAEliminar.cuit);
+    if (!resultado.success) {
       setMensajeError('No se pudo eliminar el cliente');
-      setClienteAEliminar(null);
     }
-  };
-
-  const cancelarEliminacion = () => {
     setClienteAEliminar(null);
-  };
-
-  const handleEditar = (cliente) => {
-    setClienteAEditar(cliente);
   };
 
   const confirmarEdicion = async (e, nuevaRazonSocial, nuevoCuit) => {
     e.preventDefault();
-    try {
-      await axios.put(`http://localhost:4000/api/clientes/${clienteAEditar.cuit}`, {// esta haciendo una solicitud PUT al servidor para actualizar el cliente.
-        razon_social: nuevaRazonSocial,
-        cuit: nuevoCuit,
-      });
-      obtenerClientes();
-      setClienteAEditar(null);
-    } catch (error) {
-      console.error('Error al editar cliente:', error);
+    if (!clienteAEditar) return;
+
+    const resultado = await editarCliente(clienteAEditar.cuit, {
+      razon_social: nuevaRazonSocial,
+      cuit: nuevoCuit,
+    });
+
+    if (!resultado.success) {
       setMensajeError('Error al actualizar cliente');
-      setClienteAEditar(null);
     }
+    setClienteAEditar(null);
   };
 
   return (
@@ -137,7 +88,6 @@ const Clientes = () => {
           </div>
 
           <div className="menu-matriz">
-            {/* Buscador restaurado */}
             <div className="filtros">
               <input
                 className="buscador"
@@ -160,19 +110,25 @@ const Clientes = () => {
                   </tr>
                 </thead>
                 <tbody className="table">
-                  {clientes.map((cliente, index) => (
-                    <tr key={index} className="table-trdatos">
-                      <td className="table-datos">{cliente.id}</td>
-                      <td className="table-datos">{cliente.razon_social}</td>
-                      <td className="table-datos">{cliente.cuit}</td>
-                      <td className="table-datostotal">
-                        <div className="crud-icons">
-                          <i className="bi bi-pencil-fill" onClick={() => handleEditar(cliente)}></i>
-                          <i className="bi bi-trash3-fill" onClick={() => handleEliminar(cliente)}></i>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                  {loading ? (
+                    <tr><td colSpan="4">Cargando clientes...</td></tr>
+                  ) : clientesFiltrados.length > 0 ? (
+                    clientesFiltrados.map((cliente, index) => (
+                      <tr key={index} className="table-trdatos">
+                        <td className="table-datos">{cliente.id}</td>
+                        <td className="table-datos">{cliente.razon_social}</td>
+                        <td className="table-datos">{cliente.cuit}</td>
+                        <td className="table-datostotal">
+                          <div className="crud-icons">
+                            <i className="bi bi-pencil-fill" onClick={() => setClienteAEditar(cliente)}></i>
+                            <i className="bi bi-trash3-fill" onClick={() => setClienteAEliminar(cliente)}></i>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr><td colSpan="4">No se encontraron clientes.</td></tr>
+                  )}
                 </tbody>
               </table>
             </div>
@@ -184,7 +140,7 @@ const Clientes = () => {
             tipo="eliminar"
             mensaje={`¿Seguro que querés eliminar a ${clienteAEliminar.razon_social}?`}
             onConfirmar={confirmarEliminacion}
-            onCancelar={cancelarEliminacion}
+            onCancelar={() => setClienteAEliminar(null)}
           />
         )}
 

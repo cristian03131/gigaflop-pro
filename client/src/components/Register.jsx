@@ -3,16 +3,29 @@ import '../CSS/register.css';
 import axios from 'axios';
 
 const Register = ({ onClose }) => {
-  
   const [razonSocial, setRazonSocial] = useState('');
   const [cuit, setCuit] = useState('');
   const [mensaje, setMensaje] = useState('');
   const [tipoMensaje, setTipoMensaje] = useState(''); // 'exito' o 'error'
 
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000';
+
+  // Validación básica de CUIT (solo números y guiones permitidos, longitud típica)
+  const validarCuit = (valor) => {
+    const cuitRegex = /^[0-9-]{11,13}$/;
+    return cuitRegex.test(valor);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validarCuit(cuit)) {
+      setMensaje('CUIT no válido. Debe contener solo números y guiones.');
+      setTipoMensaje('error');
+      return;
+    }
+
     try {
-      const res = await axios.post('http://localhost:4000/api/clientes', {
+      const res = await axios.post(`${API_URL}/api/clientes`, {
         razon_social: razonSocial,
         cuit: cuit,
       });
@@ -20,7 +33,7 @@ const Register = ({ onClose }) => {
       setTipoMensaje('exito');
       setRazonSocial('');
       setCuit('');
-      // No cierres inmediatamente si querés mostrar el mensaje primero
+      // Podés llamar a onClose() acá si querés cerrar tras éxito
     } catch (error) {
       console.error("Error al registrar cliente:", error);
       setMensaje("No se pudo registrar el cliente");
@@ -57,6 +70,7 @@ const Register = ({ onClose }) => {
               value={cuit}
               onChange={(e) => setCuit(e.target.value)}
               required
+              maxLength={13}
             />
           </div>
 

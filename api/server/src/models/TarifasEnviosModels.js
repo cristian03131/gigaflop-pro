@@ -1,4 +1,4 @@
-import supabase from '../config/supabaseClient';
+import supabase from '../config/supabaseClient.js';
 
 // Listar todas las tarifas de envío
 export const listarTarifasEnvio = async () => {

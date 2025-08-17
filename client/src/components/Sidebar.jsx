@@ -4,9 +4,8 @@ import axios from 'axios';
 import { useUser } from '../context/UserContext';
 
 const Sidebar = () => {
-  const { usuario, setUsuario, cargando } = useUser();// este hook permite acceder al contexto de usuario
+  const { usuario, setUsuario, cargando } = useUser(); // Hook para contexto usuario
   const navigate = useNavigate();
-  const API_URL = process.env.REACT_APP_API_URL;
 
   if (cargando) return null;
 
@@ -27,8 +26,8 @@ const Sidebar = () => {
         <div className="cont-menu">
           <nav>
             <h5 className="nombre-sidebar">{usuario ? usuario.nombre : 'Usuario'}</h5>
-            <a href="#">Mi Perfil</a>
-            <a href="#" onClick={handleLogout}>Cerrar Sesión</a>
+            <NavLink to="/perfil">Mi Perfil</NavLink>
+            <button onClick={handleLogout} className="btn-logout">Cerrar Sesión</button>
           </nav>
           <label htmlFor="btn-menu">✖️</label>
         </div>

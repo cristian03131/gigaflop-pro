@@ -1,6 +1,6 @@
 import 'dotenv/config';  // Carga variables de entorno en desarrollo
 import app from './app.js';
-import pool from './config/db.js';
+import pool from './config/supabaseClient.js';
 
 // (Opcional) Verificar conexión a la base de datos al iniciar la función serverless
 pool.query('SELECT 1')

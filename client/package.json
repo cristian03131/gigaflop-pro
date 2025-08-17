@@ -1,7 +1,8 @@
 {
   "type": "module",
-  "homepage": "/client",
+  
   "dependencies": {
+    "@supabase/supabase-js": "^2.55.0",
     "axios": "^1.10.0",
     "bootstrap-icons": "^1.13.1",
     "react": "^19.1.0",

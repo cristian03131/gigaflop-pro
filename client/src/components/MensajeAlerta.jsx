@@ -1,38 +1,125 @@
-import React, { useState } from 'react';
-import '../CSS/mensajeAlerta.css';
+import React, { useState, useEffect } from 'react';
 
-const MensajeAlerta = ({ tipo, mensaje, cliente, onConfirmar, onCancelar }) => {
-  const [razonSocial, setRazonSocial] = useState(cliente?.razon_social || '');
-  const [cuit, setCuit] = useState(cliente?.cuit || '');
+const MensajeAlerta = ({
+  tipo, // 'eliminar' o 'editar'
+  mensaje,
+  onConfirmar,
+  onCancelar,
+  cotizacion, // datos iniciales para editar
+}) => {
+  const [formData, setFormData] = useState({
+    fecha: '',
+    vendedor: '',
+    estado: '',
+    cliente: '',
+    total: ''
+  });
 
-  return (
-    <div className="confirm-overlay" onClick={onCancelar}>
-      <div className="confirm-box" onClick={(e) => e.stopPropagation()}>
-        <p>{mensaje}</p>
+  useEffect(() => {
+    if (tipo === 'editar' && cotizacion) {
+      setFormData({
+        fecha: cotizacion.fecha || '',
+        vendedor: cotizacion.vendedor || '',
+        estado: cotizacion.estado || '',
+        cliente: cotizacion.cliente || '',
+        total: cotizacion.total || ''
+      });
+    }
+  }, [cotizacion, tipo]);
 
-        {tipo === 'editar' && (
-          <form onSubmit={(e) => onConfirmar(e, razonSocial, cuit)}>
-            <div className="form">
-              <label>Razón Social:</label>
-              <input type="text" value={razonSocial} onChange={(e) => setRazonSocial(e.target.value)} required />
-            </div>
-            <div className="form">
-              <label>CUIT:</label>
-              <input type="text" value={cuit} onChange={(e) => setCuit(e.target.value)} required />
-            </div>
-            <button className="btn-confirmar" type="submit">Guardar Cambios</button>
-          </form>
-        )}
+  const handleChange = (e) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
 
-        {tipo === 'eliminar' && (
-          <div className="confirm-buttons">
-            <button className="btn-cancelar" onClick={onCancelar}>Cancelar</button>
-            <button className="btn-confirmar" onClick={onConfirmar}>Sí, eliminar</button>
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onConfirmar(e, formData);
+  };
+
+  if (tipo === 'eliminar') {
+    return (
+      <div className="modal-overlay" onClick={onCancelar}>
+        <div className="modal-content" onClick={e => e.stopPropagation()}>
+          <p>{mensaje}</p>
+          <div className="buttons">
+            <button onClick={onConfirmar}>Confirmar</button>
+            <button onClick={onCancelar}>Cancelar</button>
           </div>
-        )}
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
+
+  if (tipo === 'editar') {
+    return (
+      <div className="modal-overlay" onClick={onCancelar}>
+        <div className="modal-content" onClick={e => e.stopPropagation()}>
+          <h3>{mensaje}</h3>
+          <form onSubmit={handleSubmit}>
+            <label>
+              Fecha:
+              <input
+                type="text"
+                name="fecha"
+                value={formData.fecha}
+                onChange={handleChange}
+                required
+              />
+            </label>
+            <label>
+              Vendedor:
+              <input
+                type="text"
+                name="vendedor"
+                value={formData.vendedor}
+                onChange={handleChange}
+                required
+              />
+            </label>
+            <label>
+              Estado:
+              <input
+                type="text"
+                name="estado"
+                value={formData.estado}
+                onChange={handleChange}
+                required
+              />
+            </label>
+            <label>
+              Cliente:
+              <input
+                type="text"
+                name="cliente"
+                value={formData.cliente}
+                onChange={handleChange}
+                required
+              />
+            </label>
+            <label>
+              Total:
+              <input
+                type="text"
+                name="total"
+                value={formData.total}
+                onChange={handleChange}
+                required
+              />
+            </label>
+            <div className="buttons">
+              <button type="submit">Guardar</button>
+              <button type="button" onClick={onCancelar}>Cancelar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
 };
 
 export default MensajeAlerta;

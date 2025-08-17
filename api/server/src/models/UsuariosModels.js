@@ -1,4 +1,4 @@
-import supabase from '../config/supabaseClient';
+import supabase from '../config/supabaseClient.js';
 
 // Buscar usuario por email (incluye password, para login)
 export async function findUserByEmail(email) {

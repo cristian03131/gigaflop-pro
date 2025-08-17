@@ -4,17 +4,25 @@ import axios from 'axios';
 
 const RutaProtegida = () => {
   const [autenticado, setAutenticado] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     axios
       .get('/api/usuarios/checkAuth', { withCredentials: true })
-      .then(() => setAutenticado(true))
-      .catch(() => setAutenticado(false));
+      .then(() => {
+        setAutenticado(true);
+        setError(null);
+      })
+      .catch(() => {
+        setAutenticado(false);
+      });
   }, []);
 
-  if (autenticado === null) return null; // o un spinner cargando
+  if (autenticado === null) return <div>Cargando...</div>;
 
-  return autenticado ? <Outlet /> : <Navigate to="/" />;
+  if (error) return <div>Error verificando autenticación</div>;
+
+  return autenticado ? <Outlet /> : <Navigate to="/login" />;
 };
 
 export default RutaProtegida;

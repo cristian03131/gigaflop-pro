@@ -14,7 +14,7 @@ const Home = () => {
     <header className="header-home">
         <h1 className="title-home">Gigaflop</h1>
         <nav className="nav">
-            
+          <NavLink to="/registro" className="registro-home">REGISTRARSE</NavLink>
           <NavLink href="#" className='login-home' to='/login'><i className="bi bi-person-circle"></i> LOGIN</NavLink>
      
         </nav>

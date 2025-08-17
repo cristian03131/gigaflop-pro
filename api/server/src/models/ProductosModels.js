@@ -1,4 +1,4 @@
-import supabase from '../config/supabaseClient';
+import supabase from '../config/supabaseClient.js';
 
 // Buscar producto por part_number exacto (ignorando mayúsculas y espacios)
 export const buscarProductoPorPartNumber = async (partNumber) => {

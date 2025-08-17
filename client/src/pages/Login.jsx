@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom'
-import '../CSS/login.css'
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import '../CSS/login.css';
+import { supabase } from '../supabaseClient';
 import { useUser } from '../context/UserContext.jsx';
 
 const Login = () => {
@@ -11,53 +11,52 @@ const Login = () => {
   const [error, setError] = useState('');
 
   const navigate = useNavigate();
-  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000/api';
+
   const handleLogin = async () => {
-    try {
-      const res = await axios.post(
-        `${API_URL}/usuarios/login`,
-        { email, password },
-        { withCredentials: true }
-      );
-      setUsuario(res.data.usuario);
+    setError(''); // limpiar error previo
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      setError(error.message);
+    } else {
+      setUsuario(data.user);
       navigate('/menu');
-    } catch (err) {
-      const msg = err.response?.data?.message || 'Error de conexión';
-      setError(msg);
     }
   };
 
   return (
-    <>
-      <div className="background-container">
-        <div className="loginbox">
-          <div className="title-container-login">
-            <h2 className="title">GIGAFLOP</h2>
-          </div>
-          <div className="input-container">
-            <input
-              type="email"
-              placeholder="Email"
-              className="input"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <input
-              type="password"
-              placeholder="Contraseña"
-              className="input"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <button className="login-button" onClick={handleLogin}>
-              Iniciar Sesión
-            </button>
-            {error && <p className="error-message">{error}</p>}
-          </div>
+    <div className="background-container">
+      <div className="loginbox">
+        <div className="title-container-login">
+          <h2 className="title">GIGAFLOP</h2>
+        </div>
+        <div className="input-container">
+          <input
+            type="email"
+            placeholder="Email"
+            className="input"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Contraseña"
+            className="input"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button className="login-button" onClick={handleLogin}>
+            Iniciar Sesión
+          </button>
+          {error && <p className="error-message">{error}</p>}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
-export default Login
+export default Login;
+
